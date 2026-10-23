@@ -1,0 +1,52 @@
+diff --git a/LibTorrent.xcodeproj/project.pbxproj b/LibTorrent.xcodeproj/project.pbxproj
+index d998be2..3612ea3 100644
+--- a/LibTorrent.xcodeproj/project.pbxproj
++++ b/LibTorrent.xcodeproj/project.pbxproj
+@@ -628,7 +628,14 @@
+ 					"TORRENT_HAVE_MMAP=0",
+ 					TORRENT_USE_OPENSSL,
+ 					TORRENT_USE_LIBCRYPTO,
+-					"TORRENT_ABI_VERSION=4",
++					"TORRENT_ABI_VERSION=100",
++					"TORRENT_USE_RTC=0",
++					TORRENT_SSL_PEERS,
++					BOOST_ASIO_NO_DEPRECATED,
++					BOOST_SYSTEM_USE_UTF8,
++					BOOST_EXCEPTION_DISABLE,
++					BOOST_ASIO_HAS_STD_CHRONO,
++					"_FILE_OFFSET_BITS=64",
+ 					$inherited,
+ 				);
+ 				GENERATE_INFOPLIST_FILE = YES;
+@@ -682,7 +689,14 @@
+ 					"TORRENT_HAVE_MMAP=0",
+ 					TORRENT_USE_OPENSSL,
+ 					TORRENT_USE_LIBCRYPTO,
+-					"TORRENT_ABI_VERSION=4",
++					"TORRENT_ABI_VERSION=100",
++					"TORRENT_USE_RTC=0",
++					TORRENT_SSL_PEERS,
++					BOOST_ASIO_NO_DEPRECATED,
++					BOOST_SYSTEM_USE_UTF8,
++					BOOST_EXCEPTION_DISABLE,
++					BOOST_ASIO_HAS_STD_CHRONO,
++					"_FILE_OFFSET_BITS=64",
+ 					$inherited,
+ 				);
+ 				GENERATE_INFOPLIST_FILE = YES;
+@@ -806,7 +820,14 @@
+ 					"TORRENT_HAVE_MMAP=0",
+ 					TORRENT_USE_OPENSSL,
+ 					TORRENT_USE_LIBCRYPTO,
+-					"TORRENT_ABI_VERSION=4",
++					"TORRENT_ABI_VERSION=100",
++					"TORRENT_USE_RTC=0",
++					TORRENT_SSL_PEERS,
++					BOOST_ASIO_NO_DEPRECATED,
++					BOOST_SYSTEM_USE_UTF8,
++					BOOST_EXCEPTION_DISABLE,
++					BOOST_ASIO_HAS_STD_CHRONO,
++					"_FILE_OFFSET_BITS=64",
+ 					$inherited,
+ 				);
+ 				GENERATE_INFOPLIST_FILE = YES;

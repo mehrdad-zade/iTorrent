@@ -1,0 +1,62 @@
+diff --git a/LibTorrent/Core/SessionSettings/SessionSettings.h b/LibTorrent/Core/SessionSettings/SessionSettings.h
+index 10bb7b5..d419231 100644
+--- a/LibTorrent/Core/SessionSettings/SessionSettings.h
++++ b/LibTorrent/Core/SessionSettings/SessionSettings.h
+@@ -38,6 +38,10 @@ NS_SWIFT_NAME(Session.Settings)
+ @property (readwrite, nonatomic) NSUInteger maxDownloadSpeed;
+ @property (readwrite, nonatomic) NSUInteger maxUploadSpeed;
+ 
++/// Download-only mode: never unchoke peers (so no file data is ever uploaded),
++/// send no allowed-fast pieces, and make no outgoing connections for seeding torrents.
++@property (readwrite, nonatomic) BOOL leechOnly;
++
+ @property (readwrite, nonatomic) BOOL isDhtEnabled;
+ @property (readwrite, nonatomic) BOOL isLsdEnabled;
+ @property (readwrite, nonatomic) BOOL isUtpEnabled;
+diff --git a/LibTorrent/Core/SessionSettings/SessionSettings.mm b/LibTorrent/Core/SessionSettings/SessionSettings.mm
+index b87531e..92f03f5 100644
+--- a/LibTorrent/Core/SessionSettings/SessionSettings.mm
++++ b/LibTorrent/Core/SessionSettings/SessionSettings.mm
+@@ -61,6 +61,14 @@ - (instancetype)init {
+     settings.set_int(lt::settings_pack::download_rate_limit, (int)_maxDownloadSpeed);
+     settings.set_int(lt::settings_pack::upload_rate_limit, (int)_maxUploadSpeed);
+ 
++    if (_leechOnly) {
++        settings.set_int(lt::settings_pack::choking_algorithm, lt::settings_pack::fixed_slots_choker);
++        settings.set_int(lt::settings_pack::unchoke_slots_limit, 0);
++        settings.set_int(lt::settings_pack::num_optimistic_unchoke_slots, 0);
++        settings.set_int(lt::settings_pack::allowed_fast_set_size, 0);
++        settings.set_bool(lt::settings_pack::seeding_outgoing_connections, false);
++    }
++
+     // Networking protocols
+     settings.set_bool(lt::settings_pack::enable_dht, _isDhtEnabled);
+     settings.set_bool(lt::settings_pack::enable_lsd, _isLsdEnabled);
+diff --git a/LibTorrent/Core/TorrentHandleSnapshot/TorrentHandleSnapshot.h b/LibTorrent/Core/TorrentHandleSnapshot/TorrentHandleSnapshot.h
+index a4346c2..2fb7bd3 100644
+--- a/LibTorrent/Core/TorrentHandleSnapshot/TorrentHandleSnapshot.h
++++ b/LibTorrent/Core/TorrentHandleSnapshot/TorrentHandleSnapshot.h
+@@ -45,6 +45,8 @@ NS_SWIFT_NAME(TorrentHandle.Snapshot)
+ @property (readonly) uint64_t totalWantedDone;
+ @property (readonly) uint64_t totalDownload;
+ @property (readonly) uint64_t totalUpload;
++/// File data sent to peers, excluding protocol overhead.
++@property (readonly) uint64_t totalPayloadUpload;
+ @property (readonly) BOOL isPaused;
+ @property (readonly) BOOL isFinished;
+ @property (readonly) BOOL isSeed;
+diff --git a/LibTorrent/Core/TorrentHandleSnapshot/TorrentHandleSnapshot.mm b/LibTorrent/Core/TorrentHandleSnapshot/TorrentHandleSnapshot.mm
+index 39c97ba..deafcd6 100644
+--- a/LibTorrent/Core/TorrentHandleSnapshot/TorrentHandleSnapshot.mm
++++ b/LibTorrent/Core/TorrentHandleSnapshot/TorrentHandleSnapshot.mm
+@@ -225,6 +225,10 @@ - (uint64_t)totalUpload {
+     return _status.total_upload;
+ }
+ 
++- (uint64_t)totalPayloadUpload {
++    return _status.total_payload_upload;
++}
++
+ - (BOOL)isPaused {
+     return static_cast<bool>(_status.flags & lt::torrent_flags::paused);
+ }

@@ -1,0 +1,3 @@
+[submodule "Submodules/LibTorrent-Swift"]
+	path = Submodules/LibTorrent-Swift
+	url = https://github.com/XITRIX/LibTorrent-Swift.git
